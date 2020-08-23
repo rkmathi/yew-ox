@@ -35,14 +35,15 @@ struct Model {
 
 fn is_won(cells: &[CellState; 9]) -> bool {
     for cell in [CellState::O, CellState::X].iter() {
-        if (cells[0] == *cell && cells[1] == *cell && cells[2] == *cell) ||
-            (cells[3] == *cell && cells[4] == *cell && cells[5] == *cell) ||
-            (cells[6] == *cell && cells[7] == *cell && cells[8] == *cell) ||
-            (cells[0] == *cell && cells[3] == *cell && cells[6] == *cell) ||
-            (cells[1] == *cell && cells[4] == *cell && cells[7] == *cell) ||
-            (cells[2] == *cell && cells[5] == *cell && cells[8] == *cell) ||
-            (cells[0] == *cell && cells[4] == *cell && cells[8] == *cell) ||
-            (cells[2] == *cell && cells[4] == *cell && cells[7] == *cell) {
+        if (cells[0] == *cell && cells[1] == *cell && cells[2] == *cell)
+            || (cells[3] == *cell && cells[4] == *cell && cells[5] == *cell)
+            || (cells[6] == *cell && cells[7] == *cell && cells[8] == *cell)
+            || (cells[0] == *cell && cells[3] == *cell && cells[6] == *cell)
+            || (cells[1] == *cell && cells[4] == *cell && cells[7] == *cell)
+            || (cells[2] == *cell && cells[5] == *cell && cells[8] == *cell)
+            || (cells[0] == *cell && cells[4] == *cell && cells[8] == *cell)
+            || (cells[2] == *cell && cells[4] == *cell && cells[7] == *cell)
+        {
             return true;
         }
     }
@@ -114,30 +115,34 @@ impl Component for Model {
     fn view(&self) -> Html {
         ConsoleService::log("view");
 
-        let draw_button = |pos, cell| html! {
-            <button onclick=self.link.callback(move |_| Msg::Put(pos))>{ cell }</button>
+        let draw_button = |pos, cell| {
+            html! {
+                <button onclick=self.link.callback(move |_| Msg::Put(pos))>{ cell }</button>
+            }
         };
 
-        let draw_board = |cells: [CellState; 9]| html! {
-            <p>
-                <table>
-                    <tr>
-                        <td>{ draw_button(0, cells[0]) }</td>
-                        <td>{ draw_button(1, cells[1]) }</td>
-                        <td>{ draw_button(2, cells[2]) }</td>
-                    </tr>
-                    <tr>
-                        <td>{ draw_button(3, cells[3]) }</td>
-                        <td>{ draw_button(4, cells[4]) }</td>
-                        <td>{ draw_button(5, cells[5]) }</td>
-                    </tr>
-                    <tr>
-                        <td>{ draw_button(6, cells[6]) }</td>
-                        <td>{ draw_button(7, cells[7]) }</td>
-                        <td>{ draw_button(8, cells[8]) }</td>
-                    </tr>
-                </table>
-            </p>
+        let draw_board = |cells: [CellState; 9]| {
+            html! {
+                <p>
+                    <table>
+                        <tr>
+                            <td>{ draw_button(0, cells[0]) }</td>
+                            <td>{ draw_button(1, cells[1]) }</td>
+                            <td>{ draw_button(2, cells[2]) }</td>
+                        </tr>
+                        <tr>
+                            <td>{ draw_button(3, cells[3]) }</td>
+                            <td>{ draw_button(4, cells[4]) }</td>
+                            <td>{ draw_button(5, cells[5]) }</td>
+                        </tr>
+                        <tr>
+                            <td>{ draw_button(6, cells[6]) }</td>
+                            <td>{ draw_button(7, cells[7]) }</td>
+                            <td>{ draw_button(8, cells[8]) }</td>
+                        </tr>
+                    </table>
+                </p>
+            }
         };
 
         let draw_message = |turn, won| {
@@ -153,17 +158,18 @@ impl Component for Model {
             let body = match turn {
                 CellState::None => "",
                 CellState::O => "O's turn",
-                CellState::X => "X's turn"
+                CellState::X => "X's turn",
             };
             html! { <p>{ body }</p> }
         };
 
-        let draw_reset = || html! {
-            <p>
-                <button onclick=self.link.callback(|_| Msg::Reset)>{ "reset" }</button>
-            </p>
+        let draw_reset = || {
+            html! {
+                <p>
+                    <button onclick=self.link.callback(|_| Msg::Reset)>{ "reset" }</button>
+                </p>
+            }
         };
-
 
         html! {
             <div>
